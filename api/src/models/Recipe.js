@@ -13,10 +13,16 @@ module.exports = (sequelize) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        is: /\D/ig,
+      }
     },
     image: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isUrl: true,
+      }
     },
     summary: {
       type: DataTypes.TEXT,
@@ -25,6 +31,7 @@ module.exports = (sequelize) => {
     healthScore: {
       type: DataTypes.FLOAT,
       validate: {
+      isNumeric: true,
       min: 0,
       max: 100
       }

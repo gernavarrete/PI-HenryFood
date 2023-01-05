@@ -30,29 +30,6 @@ const getApiData = async (data) => {
           return apiData;
 }
 
-const getApiDataForId = async (id) => {
-  const {API_KEY, RECIPES_ENDPOINT} = process.env;
-  const recipeData = await axios.get(`${RECIPES_ENDPOINT}${id}/information?apiKey=${API_KEY}`,{
-    headers: { "Accept-Encoding": "gzip,compress,deflate"}
-    })                      // Se realiza la solicitud de la informacion a la API por el id de la receta
-  .then(recipe =>
-    { const { data } = recipe;  // se crea un objeto con las propiedades especificadas extraidas de la 
-    return Object(              // informacion de la API
-      { id: data.id,
-      name: data.title,
-      image: data.image,
-      summary : data.summary,
-      diets: data.diets,
-      healthScore: data.healthScore,
-      stepByStep: data.analyzedInstructions[0]?.steps.map( step => { return {
-        numberStep : step.number,
-        description: step.step
-      }})}
-      )}
-    )
-    return recipeData;
-}
-
 
 const getDbRecipes = async () => {
       // Se hace la solicitud a la informacion cargada en nuestra base de datos
@@ -88,8 +65,9 @@ const getRecipes = async (req,res) => {
   const { name } = req.query;
   if(!name) res.status(SUCCESS).json(await getAllRecipes())
   else {
-    const parameter = new RegExp(name,'ig')
-    const recipes = await getAllRecipes()
+    const parameter = new RegExp(name,'ig') // creamos la expresion regular con el value de name
+    const recipes = await getAllRecipes() //asignamos a recipes todas las recipes 
+    //por cada receta buscamos que en la prop name contenga al menos una vez la palabra proveniente de req.query
     const recipeByParameter = recipes.filter(recipe => parameter.test(recipe.name))
     recipeByParameter.length > 0 ? 
     res.status(SUCCESS).json(recipeByParameter) : 
@@ -116,7 +94,7 @@ const createRecipe = async (req, res) => {
     image, 
     summary, 
     healthScore,
-    diet,
+    diets,
     stepByStep,
      } = req.body
     const recipe = {
@@ -126,10 +104,17 @@ const createRecipe = async (req, res) => {
       healthScore : healthScore || 0,
       stepByStep : stepByStep || [],
     }
+    const newDiets = await DietType.findAll({
+        where : {
+          name : diets
+        }
+      })
     const newRecipe = await Recipe.create(recipe);
-    res.status(CREATED).json(newRecipe);
+    await newRecipe.addDietType(newDiets)
+
+    res.status(CREATED).json({message: 'Su Receta se creo de manera exitosa', newRecipe});
   } catch (err) {
-    res.status(INTERNAL_SERVER_ERROR).json(err)
+    res.status(BAD_REQUEST).json(err)
   }
 }
 
