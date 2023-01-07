@@ -2,6 +2,11 @@
   text-align: center;
 }
 
+.bg_image{
+  background-image: url('./utils/images/backgroundHome.jpg');
+  background-size: cover;
+  height: 100vh;
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;

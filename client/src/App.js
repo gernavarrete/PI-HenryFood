@@ -1,10 +1,18 @@
+import React from 'react';
 import './App.css';
-const urlimage = 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1374&q=80'
+import { Route } from 'react-router-dom';
+import  NavBar  from './components/Nav/NavBar.jsx';
+import Home from './components/Home/Home.jsx';
+import CreateRecipe from './components/CreateRecipe/CreateRecipe.jsx';
+
+
 
 function App() {
   return (
-    <div className="App">
-      <h1>Henry Food</h1>
+    <div className="App bg_image">
+      <NavBar/>
+      <Route exact path={'/home'} component={Home}/>
+      <Route exact path={'/createRecipe'} component={CreateRecipe}/>
     </div>
   );
 }
