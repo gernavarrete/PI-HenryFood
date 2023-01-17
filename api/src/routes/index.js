@@ -11,9 +11,6 @@ const router = Router();
 // Ejemplo: router.use('/auth', authRouter);
 
 
-router.get('/', async (req, res) => {
-    res.send('Landing Page Cooming soon');
-})
 router.use('/recipes', recipeRoutes)
 router.use('/diets', dietRoutes)
 

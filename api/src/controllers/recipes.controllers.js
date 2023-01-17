@@ -1,5 +1,5 @@
 const axios = require('axios')
-const { Recipe , DietType } = require('../db.js');
+const { Recipe , Diet } = require('../db.js');
 const { 
   SUCCESS, 
   CREATED, 
@@ -7,6 +7,7 @@ const {
   BAD_REQUEST, 
   NOT_FOUND,
   INTERNAL_SERVER_ERROR} = require('../utils/codigos-status.js');
+
 
 const getApiData = async (data) => {
         const {API_KEY, RECIPES_ENDPOINT} = process.env;
@@ -35,17 +36,18 @@ const getDbRecipes = async () => {
       // Se hace la solicitud a la informacion cargada en nuestra base de datos
       const dbRecipes = await Recipe.findAll({
         include: {
-          model: DietType,
+          model: Diet,
           attributes: ["name"],
           through: {
             attributes: [],
           },
         },
       })
+      .then(result => {console.log(result); return result})
       .then((result) => result.map( element => {
         return {
           ...element.dataValues,
-          dietTypes: element.dataValues.dietTypes.map((diet) => diet.name),
+          diets: element.dataValues.diets.map((diet) => diet.name),
         };
       })
       );
@@ -58,7 +60,7 @@ const getDbRecipes = async () => {
 const getAllRecipes = async () => {
   //const apiData = await getApiData();
   const dbData = await getDbRecipes();
-  return [/* ...apiData, */...dbData];
+  return [/*  ...apiData ,*/ ...dbData];
 }
 
 const getRecipes = async (req,res) => {
@@ -77,9 +79,9 @@ const getRecipes = async (req,res) => {
 
 const getIdRecipe = async (req, res) => {
   try {
-    const { idRecipe } = req.params;
+    const { idrecipe } = req.params;
     const allRecipes = await getAllRecipes();
-    const recipe = allRecipes.find(recipe => (recipe.id).toString() === idRecipe)
+    const recipe = allRecipes.find(recipe => (recipe.id).toString() === idrecipe)
     recipe ? res.status(SUCCESS).json(recipe) 
     : res.status(NOT_FOUND).json({msg : 'La receta que esta solicitando no se encuentra'});
   } catch(err) {
@@ -104,15 +106,24 @@ const createRecipe = async (req, res) => {
       healthScore : healthScore || 0,
       stepByStep : stepByStep || [],
     }
-    const newDiets = await DietType.findAll({
-        where : {
-          name : diets
-        }
-      })
-    const newRecipe = await Recipe.create(recipe);
-    await newRecipe.addDietType(newDiets)
 
-    res.status(CREATED).json({message: 'Su Receta se creo de manera exitosa', newRecipe});
+    
+    const newRecipe = await Recipe.create(recipe);
+
+
+    diets.forEach( async diet => 
+      {
+        const dietRecipe = await Diet.findOne({
+          where : {
+          name: diet.name
+          }
+        })
+        
+        await newRecipe.addDiet(dietRecipe);
+      }
+    )
+
+    res.status(CREATED).send('Su Receta se creo de manera exitosa');
   } catch (err) {
     res.status(BAD_REQUEST).json(err)
   }
