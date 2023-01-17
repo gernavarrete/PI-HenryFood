@@ -5,7 +5,7 @@
 .bg_image{
   background-image: url('./utils/images/backgroundHome.jpg');
   background-size: cover;
-  height: 100vh;
+  min-height: 100vh;
 }
 .App-logo {
   height: 40vmin;

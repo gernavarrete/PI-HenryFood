@@ -1,0 +1,36 @@
+.container-main-detail {
+    background-color: brown;
+    display: flex;
+    margin-left: 15%;
+    margin-right: 15%;
+    flex-direction: column;
+    align-items: center;
+    width: 70%;
+    height: auto;
+}
+
+
+.recipe-detail-img {
+    background-color: rgb(231, 59, 59);
+    display: flex;
+    align-items: center;
+    align-content: center;
+}
+
+.recipe-detail-img img {
+    
+    
+}
+.recipe-detail-summary {
+    background-color: white;
+}
+.recipe-detail-summary p {
+    margin-left: 15%;
+    margin-right: 15%;
+    color: black;
+    text-align: start;
+}
+.container-img-summary {
+    display: flex;
+    flex-direction: row;
+}

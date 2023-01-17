@@ -1,18 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
-import { Route } from 'react-router-dom';
-import  NavBar  from './components/Nav/NavBar.jsx';
+import { Route, Switch } from 'react-router-dom';
+import  LandingPage  from './components/LandingPage/LandingPage.jsx';
 import Home from './components/Home/Home.jsx';
 import CreateRecipe from './components/CreateRecipe/CreateRecipe.jsx';
+import RecipeDetail from './components/RecipeDetail/RecipeDetail';
+
 
 
 
 function App() {
+  
   return (
     <div className="App bg_image">
-      <NavBar/>
+      <Switch>
+      <Route exact path={'/'} component={LandingPage}/>
       <Route exact path={'/home'} component={Home}/>
-      <Route exact path={'/createRecipe'} component={CreateRecipe}/>
+      <Route exact path={'/recipes/:idrecipe'} component={RecipeDetail}/>
+      <Route exact path={'/createrecipe'} component={CreateRecipe}/>
+      <Route exact path="*" component={LandingPage}/>
+      </Switch>
+      
     </div>
   );
 }
