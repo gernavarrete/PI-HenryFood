@@ -17,21 +17,35 @@ export const getRecipes = () => async dispatch => {
 
 
 export const getRecipeDetail = (idRecipe) => async  dispatch => {
-    return await fetch(`http://localhost:3001/recipes/${idRecipe}`)
+    if (idRecipe) {
+      return await fetch(`http://localhost:3001/recipes/${idRecipe}`)
       .then(response => response.json())
       .then(json => {
         dispatch({ type: GET_RECIPE_DETAIL , payload: json });
         });
+    }
+    else {
+      dispatch({ type: GET_RECIPE_DETAIL , payload: {} })
+    }
 };
 
-export const createRecipe = (newRecipe) => async dispatch => {
-  let data =  await fetch(`http://localhost:3001/recipes`,{
-          method: 'POST',
-          headers : {'Content-Type' : 'application/json'},
-          body: JSON.stringify(newRecipe)
-        }).then(res => res)
-  console.log(data)
-  return data;
+export const createRecipe = (payload) => async dispatch => {
+  try {
+    let data =  await fetch(`http://localhost:3001/recipes`,{
+            method: 'POST',
+            headers : {'Content-Type' : 'application/json'},
+            body: JSON.stringify({
+              name: payload.name , 
+              image: payload.image , 
+              summary:payload.summary, 
+              healthScore: payload.healthScore, 
+              stepByStep:payload.stepByStep,
+              diets:payload.diets})
+          }).then(res => res.json())
+    return data;
+  } catch(error) {
+    return error;
+  }
 };
 
 export const getDiets = () => async dispatch => {

@@ -14,9 +14,9 @@ export default function Home() {
     
     // componentDidMount para hacer la solicitud a la api/db al iniciar el componente Home una sola vez.
     
-     useEffect(() =>{                    
-     dispatch(getRecipes());
-     //dispatch(getDiets());
+    useEffect(() =>{                    
+      dispatch(getRecipes());
+      dispatch(getDiets());
     },[])
     
     //                Filtro por DIET                  //---------------
@@ -66,7 +66,7 @@ export default function Home() {
     let cache = [ ...recipesByName ];
     
     if(order === '') return setRecipesByName(recipesByName);
-    // El metodo sort ordena segun el valor mayor igual o menor que cero dependiendo la funciona comparadora
+    // El metodo sort ordena segun el valor mayor, igual o menor que cero dependiendo la funcion comparadora
     cache.sort((a, b) => {
       if(a[type] < b[type]) return (order === "A-Z" || order === 'Menor a Mayor') ? -1 : 1;
       if(a[type] > b[type]) return (order === "A-Z" || order === 'Menor a Mayor') ? 1 : -1;
@@ -98,7 +98,7 @@ export default function Home() {
     useEffect(() => { //Cambio de estado local de Total Recipes indicando los indices que tiene que renderizar en cada pagina
         setTotalRecipes(recipesByName.slice(indexFirstPageRecipe(), indexLastPageRecipe())); 
         setNumberOfPage(Math.ceil(recipesByName.length / 9)); // cambiando el estado local de numeros de paginas a renderiza
-    }, [recipesByName, currentPage]);
+    }, [recipesByName, currentPage, allRecipes]);
 
     useEffect(() => {
         setCurrentPage(1) //setea el numero de pagina actual a 1 cuando recipesName Cambia 
@@ -127,7 +127,10 @@ export default function Home() {
                 </div>
 
                 <hr/>
-                    <Paginations currentPage={currentPage} numberOfPage={numberOfPage} handlePageNumber={handlePageNumber}/>
+                    <Paginations 
+                        currentPage={currentPage} 
+                        numberOfPage={numberOfPage} 
+                        handlePageNumber={handlePageNumber}/>
             </div>
         </div>
     );

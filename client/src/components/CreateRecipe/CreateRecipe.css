@@ -63,4 +63,17 @@
   background-color: whitesmoke;
   border: 1px solid grey;
   border-radius: 5px;
+  cursor: pointer;
+}
+
+.button-home {
+  margin-top: 10px;
+}
+
+.buttons-create-recipe:hover {
+  background-color: rgb(75, 55, 5);
+}
+
+.container-form label {
+  font-weight: bold;
 }

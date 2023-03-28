@@ -5,6 +5,7 @@
 
 .createButton {
     font-size: 20px;
+    color:darkgoldenrod;
     background-color: whitesmoke ;
     border: 1px solid grey;
     border-radius: 5px;
@@ -15,3 +16,11 @@
     justify-content: center;
 }
 
+.createButton:hover {
+    cursor: pointer;
+}
+
+  
+  
+  
+  
