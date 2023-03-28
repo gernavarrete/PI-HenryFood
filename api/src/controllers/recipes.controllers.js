@@ -13,7 +13,7 @@ const getApiData = async (data) => {
   const { API_KEY, API_KEY1, API_KEY2, RECIPES_ENDPOINT } = process.env;
   const apiData = await axios
     .get(
-      `${RECIPES_ENDPOINT}complexSearch?apiKey=${API_KEY1}&addRecipeInformation=true&number=100`,
+      `${RECIPES_ENDPOINT}complexSearch?apiKey=${API_KEY2}&addRecipeInformation=true&number=100`,
       { headers: { "Accept-Encoding": "gzip,compress,deflate" } }
     ) //Realiza la peticion de la informacion a la API
     .then((response) =>
@@ -85,11 +85,9 @@ const getRecipes = async (req, res) => {
     );
     recipeByParameter.length > 0
       ? res.status(SUCCESS).json(recipeByParameter)
-      : res
-          .status(NOT_FOUND)
-          .json({
-            msg: "No recipe can be found with the indicated parameter.",
-          });
+      : res.status(NOT_FOUND).json({
+          msg: "No recipe can be found with the indicated parameter.",
+        });
   }
 };
 
