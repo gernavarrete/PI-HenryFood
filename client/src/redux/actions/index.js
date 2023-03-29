@@ -1,3 +1,4 @@
+import axios from "axios";
 // Aca deben declarar las variables donde tengan el action types.
 export const GET_RECIPES = "GET_RECIPES";
 export const GET_RECIPE_DETAIL = "GET_RECIPE_DETAIL";
@@ -6,12 +7,8 @@ export const SET_ORDER_BY = "SET_ORDER_BY";
 export const FILTER_BY_DIET = "FILTER_BY_DIET";
 export const SET_SEARCH_VALUE = "SET_SEARCH_VALUE";
 
-const localhost = "http://localhost:3001";
-
-const railway = "https://pi-henryfood-production.up.railway.app/recipes";
-
 export const getRecipes = () => async (dispatch) => {
-  return await fetch(`/recipes`)
+  return await axios(`/recipes`)
     .then((response) => response.json())
     .then((json) => {
       dispatch({ type: GET_RECIPES, payload: json });
@@ -20,7 +17,7 @@ export const getRecipes = () => async (dispatch) => {
 
 export const getRecipeDetail = (idRecipe) => async (dispatch) => {
   if (idRecipe) {
-    return await fetch(`/recipes/${idRecipe}`)
+    return await axios(`/recipes/${idRecipe}`)
       .then((response) => response.json())
       .then((json) => {
         dispatch({ type: GET_RECIPE_DETAIL, payload: json });
@@ -32,7 +29,7 @@ export const getRecipeDetail = (idRecipe) => async (dispatch) => {
 
 export const createRecipe = (payload) => async (dispatch) => {
   try {
-    let data = await fetch(`/recipes`, {
+    let data = await axios(`/recipes`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -51,7 +48,7 @@ export const createRecipe = (payload) => async (dispatch) => {
 };
 
 export const getDiets = () => async (dispatch) => {
-  let diets = await fetch(`/diets`).then((response) => response.json());
+  let diets = await axios(`/diets`).then((response) => response.json());
 
   return dispatch({ type: GET_DIETS, payload: diets });
 };

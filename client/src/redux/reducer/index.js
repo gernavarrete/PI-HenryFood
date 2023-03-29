@@ -1,9 +1,16 @@
-import {GET_RECIPES, GET_RECIPE_DETAIL, GET_DIETS, FILTER_BY_DIET, SET_ORDER_BY, SET_SEARCH_VALUE } from '../actions/index.js'
+import {
+  GET_RECIPES,
+  GET_RECIPE_DETAIL,
+  GET_DIETS,
+  FILTER_BY_DIET,
+  SET_ORDER_BY,
+  SET_SEARCH_VALUE,
+} from "../actions/index.js";
 
 const initialState = {
-  recipes: [], 
+  recipes: [],
   recipeDetail: {},
-  diets: [], 
+  diets: [],
 
   filterByDiet: "All Diets",
 
@@ -12,26 +19,26 @@ const initialState = {
     type: undefined,
   },
 
-  searchValue: ""
+  searchValue: "",
 };
 
 const rootReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_RECIPES:
-      return { 
+      return {
         ...state,
-        recipes: action.payload
-    }
+        recipes: action.payload,
+      };
     case GET_RECIPE_DETAIL:
       return {
         ...state,
-        recipeDetail: action.payload
-    } 
+        recipeDetail: action.payload,
+      };
     case GET_DIETS:
       return {
         ...state,
-        diets: action.payload
-    }
+        diets: action.payload,
+      };
     case FILTER_BY_DIET:
       return { ...state, filterByDiet: action.payload };
 
@@ -40,7 +47,8 @@ const rootReducer = (state = initialState, action) => {
 
     case SET_SEARCH_VALUE:
       return { ...state, searchValue: action.payload };
-    default: return {...state}
+    default:
+      return { ...state };
   }
 };
 
