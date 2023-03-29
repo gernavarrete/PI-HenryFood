@@ -33,7 +33,7 @@ const getApiData = async () => {
   const { API_KEY, API_KEY1, API_KEY2, RECIPES_ENDPOINT } = process.env;
   const apiData = await axios
     .get(
-      `${RECIPES_ENDPOINT}complexSearch?apiKey=${API_KEY}&addRecipeInformation=true&number=100`,
+      `${RECIPES_ENDPOINT}complexSearch?apiKey=${API_KEY1}&addRecipeInformation=true&number=100`,
       { headers: { "Accept-Encoding": "gzip,compress,deflate" } }
     ) //Realiza la peticion de la informacion a la API
     .then((response) =>
