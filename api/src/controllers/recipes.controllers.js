@@ -9,11 +9,31 @@ const {
   INTERNAL_SERVER_ERROR,
 } = require("../utils/codigos-status.js");
 
-const getApiData = async (data) => {
+/* const getApi = async () => {
+  try {
+    let countries = (await axios.get(`${RECIPES_ENDPOINT}complexSearch?apiKey=${API_KEY2}&addRecipeInformation=true&number=100`)).data;
+      countries = await Promise.all(      //Llamo a todas las promesas juntas
+      countries.map((c) => {              //Mapeo countries
+        Country.findOrCreate({            // Busca o crea lo que le paso en where
+          where: {
+            id: c.cca3,
+            name: c.name.common,
+            flags: c.flags[1],
+            continent: c.continents[0],
+            capital: c.capital ? c.capital[0] : "Capital no encontrada",
+            subregion: c.subregion ? c.subregion : "Subregion no encontrada",
+            area: c.area,
+            population: c.population,
+          },
+        });
+      })
+    ); */
+
+const getApiData = async () => {
   const { API_KEY, API_KEY1, API_KEY2, RECIPES_ENDPOINT } = process.env;
   const apiData = await axios
     .get(
-      `${RECIPES_ENDPOINT}complexSearch?apiKey=${API_KEY2}&addRecipeInformation=true&number=100`,
+      `${RECIPES_ENDPOINT}complexSearch?apiKey=${API_KEY}&addRecipeInformation=true&number=100`,
       { headers: { "Accept-Encoding": "gzip,compress,deflate" } }
     ) //Realiza la peticion de la informacion a la API
     .then((response) =>
@@ -21,7 +41,7 @@ const getApiData = async (data) => {
         Object(
           // Se crea una array con los objetos que contienen las propiedades
           {
-            id: el.id, // que especificamos dentro la clase
+            // que especificamos dentro la clase
             name: el.title,
             image: el.image,
             summary: el.summary,
@@ -40,12 +60,39 @@ const getApiData = async (data) => {
     .catch(function (error) {
       return error.toJSON();
     });
+
+  await Recipe.bulkCreate(
+    apiData.map(({ name, image, summary, diets, healthScore, stepByStep }) => ({
+      name,
+      image,
+      summary,
+      diets,
+      healthScore,
+      stepByStep,
+    }))
+  );
+
+  /* apiData.map((el) =>
+    Recipe.findOrCreate({
+      // Se crea una array con los objetos que contienen las propiedades
+      where: {
+        // que especificamos dentro la clase
+        name: el.title,
+        image: el.image,
+        summary: el.summary,
+        diets: el.diets,
+        healthScore: el.healthScore,
+        stepByStep: el.stepByStep,
+      },
+    })
+  ); */
   return apiData;
 };
 
 const getDbRecipes = async () => {
+  const dbRecipes = await Recipe.findAll();
   // Se hace la solicitud a la informacion cargada en nuestra base de datos
-  const dbRecipes = await Recipe.findAll({
+  /* const dbRecipes = await Recipe.findAll({
     include: {
       model: Diet,
       attributes: ["name"],
@@ -60,7 +107,8 @@ const getDbRecipes = async () => {
         diets: element.dataValues.diets.map((diet) => diet.name),
       };
     })
-  );
+  ); */
+
   return dbRecipes;
 };
 
@@ -68,9 +116,9 @@ const getDbRecipes = async () => {
 // de ambas fuentes tanto de la DB como de la API.
 
 const getAllRecipes = async () => {
-  const apiData = await getApiData();
+  await getApiData();
   const dbData = await getDbRecipes();
-  return [...apiData, ...dbData];
+  return [...dbData];
 };
 
 const getRecipes = async (req, res) => {
