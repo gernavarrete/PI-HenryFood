@@ -37,36 +37,29 @@ const getApiData = async () => {
       { headers: { "Accept-Encoding": "gzip,compress,deflate" } }
     ) //Realiza la peticion de la informacion a la API
     .then((response) =>
-      response.data.results.map((el) =>
-        Object(
-          // Se crea una array con los objetos que contienen las propiedades
-          {
-            // que especificamos dentro la clase
-            name: el.title,
-            image: el.image,
-            summary: el.summary,
-            diets: el.diets,
-            healthScore: el.healthScore,
-            stepByStep: el.analyzedInstructions[0]?.steps.map((step) => {
-              return {
-                numberStep: step.number,
-                description: step.step,
-              };
-            }),
-          }
-        )
-      )
+      response.data.results.map((el) => ({
+        // que especificamos dentro la clase
+        name: el.title,
+        image: el.image,
+        summary: el.summary,
+        // arrDietas = [{name: 'vegan', id: 1}]
+        diets: el.diets, // el.diets.map(diet => arrDietas.find(el => el.name === diet).id)
+        healthScore: el.healthScore,
+        stepByStep: el.analyzedInstructions[0]?.steps.map((step) => ({
+          numberStep: step.number,
+          description: step.step,
+        })),
+      }))
     )
     .catch(function (error) {
       return error.toJSON();
     });
 
   await Recipe.bulkCreate(
-    apiData.map(({ name, image, summary, diets, healthScore, stepByStep }) => ({
+    apiData.map(({ name, image, summary, healthScore, stepByStep }) => ({
       name,
       image,
       summary,
-      diets,
       healthScore,
       stepByStep,
     }))
@@ -90,7 +83,10 @@ const getApiData = async () => {
 };
 
 const getDbRecipes = async () => {
-  const dbRecipes = await Recipe.findAll();
+  const dbRecipes = await Recipe.findAll({
+    attributes: ["id", "name", "image", "summary", "healthScore", "stepByStep"],
+    include: Diet,
+  });
   // Se hace la solicitud a la informacion cargada en nuestra base de datos
   /* const dbRecipes = await Recipe.findAll({
     include: {
@@ -108,7 +104,7 @@ const getDbRecipes = async () => {
       };
     })
   ); */
-
+  console.log(dbRecipes);
   return dbRecipes;
 };
 

@@ -11,6 +11,8 @@ const { REACT_APP_BACK_URL } = process.env;
 
 axios.defaults.baseURL = `${REACT_APP_BACK_URL}`;
 
+console.log(process.env, "baseurl", axios.defaults.baseURL);
+
 function App() {
   return (
     <div className="App bg_image">

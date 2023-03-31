@@ -8,8 +8,9 @@ export const FILTER_BY_DIET = "FILTER_BY_DIET";
 export const SET_SEARCH_VALUE = "SET_SEARCH_VALUE";
 
 export const getRecipes = () => async (dispatch) => {
-  return await axios(`/recipes`)
-    .then((response) => response.json())
+  return await axios
+    .get(`/recipes`)
+    .then((response) => response.data)
     .then((json) => {
       dispatch({ type: GET_RECIPES, payload: json });
     });
@@ -17,8 +18,9 @@ export const getRecipes = () => async (dispatch) => {
 
 export const getRecipeDetail = (idRecipe) => async (dispatch) => {
   if (idRecipe) {
-    return await axios(`/recipes/${idRecipe}`)
-      .then((response) => response.json())
+    return await axios
+      .get(`/recipes/${idRecipe}`)
+      .then((response) => response.data)
       .then((json) => {
         dispatch({ type: GET_RECIPE_DETAIL, payload: json });
       });
@@ -40,7 +42,7 @@ export const createRecipe = (payload) => async (dispatch) => {
         stepByStep: payload.stepByStep,
         diets: payload.diets,
       }),
-    }).then((res) => res.json());
+    }).then((res) => res.data);
     return data;
   } catch (error) {
     return error;
@@ -48,7 +50,7 @@ export const createRecipe = (payload) => async (dispatch) => {
 };
 
 export const getDiets = () => async (dispatch) => {
-  let diets = await axios(`/diets`).then((response) => response.json());
+  let diets = await axios.get(`/diets`).then((response) => response.data);
 
   return dispatch({ type: GET_DIETS, payload: diets });
 };
