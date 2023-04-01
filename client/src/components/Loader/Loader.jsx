@@ -1,12 +1,20 @@
 import React from "react";
 import "./Loader.css";
-import Lottie from "lottie-react";
-import loader from "../../utils/images/42205-cooking-your-food.json";
+import { Watch } from "react-loader-spinner";
 
 export default function Loader() {
   return (
     <div className="loader">
-      <Lottie animationData={loader} loop={true} />
+      <Watch
+        height="80"
+        width="80"
+        radius="48"
+        color="#4fa94d"
+        ariaLabel="watch-loading"
+        wrapperStyle={{}}
+        wrapperClassName=""
+        visible={true}
+      />
     </div>
   );
 }
